@@ -169,11 +169,11 @@ drwx------  3 root root 4096 abr  1 18:53 microsoft
 ```
 content of the script : 
 ```powershell
-$bashOutput = bash
+$idOutput = id
 
 $outputFilePath = "/dev/shm/out"
 
-$bashOutput | Out-File -FilePath $outputFilePath
+$idOutput | Out-File -FilePath $outputFilePath
 ```
 
 it saves the output of the id command to /dev/shm/out file, its possible a process executes the script in the backgorund (this box was so twisted and didnt also have binaries you would use for file transfer, one way to go about that would be to use the bash exec /dev/tcp technique to transfer pspy) so we can run commands as root effectively once we are able to write a powershell script to execute a linux command, I did this with powershell IEX and put the following content with nano (only a python or maybe perl shell would work, bash didnt work for some reason, if you know why I'd love to discuss that on discord @hesrami) : 
