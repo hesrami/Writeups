@@ -105,13 +105,6 @@ Ncat: Listening on [::]:1337
 Ncat: Listening on 0.0.0.0:1337
 Ncat: Connection from 10.10.99.115:49771.
 
-PS C:\Windows\system32> (Get-PSReadLineOption).HistorySavePath
-
-C:\Users\CyberLens\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
-PS C:\Windows\system32> PS C:\Windows\system32> type C:\Users\CyberLens\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
-
-gpudpate /force
-gpupdate /force
 PS C:\Windows\system32> PS C:\Windows\system32> gc (Get-PSReadLineOption).HistorySavePath
 gpudpate /force
 gpupdate /force
@@ -199,3 +192,5 @@ C:\Users\Administrator\Desktop>dir
                3 File(s)          1,105 bytes
                2 Dir(s)  14,939,779,072 bytes free
 ```
+Tasleeeem.
+
